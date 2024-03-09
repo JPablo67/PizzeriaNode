@@ -1,0 +1,385 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Perfect Pizzeria API",
+    "description": "API for managing orders in the perfect pizzeria",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/pizzas": {
+      "get": {
+        "summary": "Obtiene una lista de pizzas",
+        "description": "Obtiene una lista de todas las pizzas disponibles en la pizzería",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "Margarita",
+                    "description": "Margaritaa"
+                  },
+                  {
+                    "id": 2,
+                    "name": "Pepperoni",
+                    "description": "Pizza clasica con salsa de tomate, queso mozzarella y hojas de albahaca"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/createPizza": {
+      "post": {
+        "summary": "Crea una nueva pizza",
+        "description": "Crea una n ueva pizza con la ifnormacion recibida",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "description": "ID de la pizza"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nombre de la pizza"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descripcion de la pizza"
+                  },
+                  "price": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Precio de la pizza"
+                  },
+                  "ingredients": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Ingredientes de la pizza"
+                  }
+                },
+                "required": ["id", "name", "description", "price", "ingredients"]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Pizza creada exitosamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Pizza creada exitosamente"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/eliminarPizza/{pizzaId}": {
+      "delete": {
+        "summary": "Borra una pizza",
+        "description": "Borra la pizza con el ID especificado",
+        "parameters": [
+          {
+            "name": "pizzaId",
+            "in": "path",
+            "description": "ID de la pizza a borrar",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pizza eliminada exitosamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Pizza eliminada exitosamente"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pizza no encontrada"
+          }
+        }
+      }
+    },
+    "/pizzas/{pizzaId}": {
+      "parameters": [
+        {
+          "name": "pizzaId",
+          "in": "path",
+          "description": "ID de la pizza",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Obtener detalles de pizza",
+        "description": "obtiene detalles especificos de cada pizza usando su ID",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Margarita",
+                  "description": "Pizza clasica con salsa de tomate, queso mozzarella y hojas de bazil",
+                  "price": 10.99,
+                  "ingredients": ["Salsa de tomate", "Queso mozzarella", "Hojas de bazil"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pizza/{pizzaId}/ingredients": {
+      "parameters": [
+        {
+          "name": "pizzaId",
+          "in": "path",
+          "description": "ID de la pizza",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Actualiza los ingredientes de una pizza",
+        "description": "Actualiza el 4to y 5to ingredientes de la pizza con el ID especificado",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newIngredient4": {
+                    "type": "string",
+                    "description": "Nuevo 4to ingrediente"
+                  },
+                  "newIngredient5": {
+                    "type": "string",
+                    "description": "Nuevo 5to ingrediente"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operacion exitosa",
+            "content": {
+              "application/json": {
+                "example": {
+                  "id": 1,
+                  "name": "Margarita",
+                  "description": "Pizza clasica con salsa de tomate, queso mozzarella y hojas de bazil",
+                  "price": 10.99,
+                  "ingredients": ["Salsa de tomate", "Queso mozzarella", "New Ingredient 4", "New Ingredient 5"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pizza no encontrada"
+          }
+        }
+      }
+    },
+    "/cart/{id}": {
+      "get": {
+            "summary": "Obtener un carrito específico",
+            "description": "Devuelve los detalles de un carrito específico basado en su ID",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "description": "ID del carrito a obtener",
+                "required": true,
+                "type": "integer"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Operación exitosa"
+              },
+              "404": {
+                "description": "Carrito no encontrado"
+              }
+            }
+          }
+        },
+    "/cart/add/{cartId}": {
+      "post": {
+        "summary": "Agrega pizza al carrito",
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "description": "ID del carriito al que se agregara la pizza",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Pizza que se agregara al carrito",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pizzaId": {
+                    "type": "integer",
+                    "description": "ID de la pizza"
+                  }
+                },
+                "required": ["pizzaId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pizza agregada al carrito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Carrito o pizza no encontrado"
+          }
+        }
+      }
+    },
+    "/order/finalize/{cartId}": {
+      "post": {
+        "summary": "Finzaliza la orden",
+        "description": "Finaliza la orden del ID del carrito especificado",
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "description": "ID del carrito al que se le completara la orden",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Order finalizada exitosamente",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Order finalizada exitosamente"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  
+  "components": {
+    "schemas": {
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Cart ID"
+          },
+          "nombreNegocio": {
+            "type": "string",
+            "description": "Business name"
+          },
+          "nombreCliente": {
+            "type": "string",
+            "description": "Client name"
+          },
+          "pizzas": {
+            "type": "array",
+            "items": {
+              "type": "Pizza"
+            },
+            "description": "Array of pizzas in the cart"
+          },
+          "cantidadPizzas": {
+            "type": "integer",
+            "description": "Number of pizzas in the cart"
+          },
+          "total": {
+            "type": "number",
+            "description": "Total price of the cart"
+          }
+        }
+      },
+      "Pizza": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "integer",
+            "description": "ID de la pizza"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name de la pizza"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descripcion de la pizza"
+          },
+          "price": {
+            "type": "number",
+            "format": "float",
+            "description": "Precio de la pizza"
+          },
+          "ingredients": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Ingredientes de la pizza"
+          }
+        }
+      }
+    }
+  }
+}
